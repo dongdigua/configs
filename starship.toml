@@ -1,5 +1,5 @@
 # catppuccin cyan color is great
-format = "$elixir$rust$package[\\[$directory\\]─$nix_shell─$git_status$git_branch$character](cyan)"
+format = "$elixir$rust$python$package[\\[$directory\\]─$nix_shell─$git_status$git_branch$character](cyan)"
 
 add_newline = false
 
@@ -36,6 +36,10 @@ detect_extensions = []
 
 [rust]
 format = "[$symbol]($style)"
+detect_extensions = []
+
+[python]
+format = "[${symbol}${pyenv_prefix}(($virtualenv) )]($style)"
 detect_extensions = []
 
 [nix_shell]

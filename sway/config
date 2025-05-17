@@ -32,14 +32,15 @@ input "type:keyboard" {
     # Start a terminal
     bindsym $mod+Return exec $term
     bindsym $mod+x      exec emacs
-    bindsym $mod+m      exec $term mocp
+    bindsym $mod+m      exec woomer
     # Start a terminal, floating
     bindsym $mod+Shift+Return exec $term -T floating-terminal
     for_window [title="floating-terminal"] floating enable
     for_window [title="floating-terminal"] border csd
+    for_window [title="EmojiFloatWnd"] move scratchpad # fk u wemeet
     #for_window [title="floating-terminal"] blur disable
     # Start a terminal without tmux
-    bindsym $mod+Ctrl+Return exec $term fish
+    bindsym $mod+Ctrl+Return exec $term zsh
 
     # Kill focused window
     bindsym $mod+Shift+q kill
@@ -178,19 +179,14 @@ bindgesture swipe:3:down  floating enable
 #
 bar {
     id bar-1
-    position bottom
-    #swaybar_command waybar
-    status_command i3status
-    colors {
-        separator #39c5bb
-    }
+    swaybar_command waybar
 }
 
 # Gap
 default_border pixel
 smart_gaps on
 gaps inner 6
-gaps top -6
+#gaps top -6
 
 # SwayFX
 #blur enable
@@ -209,12 +205,16 @@ exec {
 #ifdef local
     fcitx5 -d
 #endif
-    wlsunset -s 17:00 -S 6:30
+    wlsunset -s 19:00 -S 6:30
     swaync
     /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-    ~/bin/somebar
 }
-exec_always settimed ~/.config/sway/sway.stw
+exec {
+    wayneko --type random
+    wayloadmon --anchors 0:1:1:0 --background-colour 0x00000000 --load-colour 0xffffffa0 --border-colour 0x00000000
+    wl-binclock --fg ~/Pictures/wl-binclock/redstone_lamp_on.png --bg ~/Pictures/wl-binclock/redstone_lamp.png -a 5
+}
+exec_always settimed -m fill ~/.config/sway/sway.stw
 
 
 # DONOT TOUCH

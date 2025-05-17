@@ -6,8 +6,11 @@ OPTIONS=perm_invent
 
 # essensial
 OPTIONS=color
+OPTIONS=time
 #OPTIONS=hilite_pet
+OPTIONS=hilite_pile
 OPTIONS=pickup_types:$
+OPTIONS=boulder:0
 
 # name
 OPTIONS=fruit:Apple
@@ -16,11 +19,10 @@ OPTIONS=catname:Jellie
 
 # make it colorful
 OPTIONS=menucolors
-MENUCOLOR=" blessed "=green
-MENUCOLOR=" holy "=green
-MENUCOLOR=" uncursed "=yellow
-MENUCOLOR=" cursed "=red
-MENUCOLOR=" unholy "=red
+MENUCOLOR="gold piece"=yellow
+MENUCOLOR=" blessed "=cyan
+#MENUCOLOR=" uncursed "=yellow
+MENUCOLOR=" cursed "=orange
 MENUCOLOR=" cursed .* (being worn) "=orange&underline
 
 OPTIONS=hitpointbar

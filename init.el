@@ -7,7 +7,17 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes t)
  '(package-selected-packages
-   '(vterm rainbow-delimiters clojure-mode evil-god-state god-mode darkman rime erlang lua-mode imenu-list writeroom-mode sdcv go-mode age restclient haskell-mode rfc-mode nasm-mode yaml-mode org-tree-slide gemini-mode shr-tag-pre-highlight rainbow-mode nix-mode htmlize doom-modeline nyan-mode benchmark-init webfeeder elpher use-package indent-guide nim-mode zenburn-theme valign fzf expand-region selectric-mode clippy catppuccin-theme pyim web-mode undo-tree smart-hungry-delete magit evil-mc neotree all-the-icons rust-mode nord-theme company markdown-mode elixir-mode racket-mode evil))
+   '(age all-the-icons benchmark-init catppuccin-theme clippy
+         clojure-mode company darkman doom-modeline elixir-mode elpher
+         erlang evil evil-god-state evil-mc expand-region fzf
+         gemini-mode go-mode god-mode haskell-mode htmlize imenu-list
+         indent-guide lua-mode magit markdown-mode nasm-mode neotree
+         nim-mode nix-mode nord-theme nyan-mode org-tree-slide pyim
+         racket-mode rainbow-delimiters rainbow-mode restclient
+         rfc-mode rime rust-mode sdcv selectric-mode
+         shr-tag-pre-highlight simple-httpd smart-hungry-delete topsy
+         undo-tree use-package valign vterm web-mode webfeeder
+         writeroom-mode yaml-mode zenburn-theme))
  '(warning-suppress-types '((comp))))
 
 (custom-set-faces
@@ -17,29 +27,10 @@
  ;; If there is more than one, they won't work right.
  )
 
-;;@ Graphical Interface ;;
-;;;ifdef dump
-(tool-bar-mode               -1)
-(menu-bar-mode               -1)
-(scroll-bar-mode             -1)
-(column-number-mode           t)
-(setq inhibit-startup-message t)
-(setq use-dialog-box        nil)
 
+;;@ Graphical Interface ;;
 (set-frame-font "-FRJN-IntoneMono Nerd Font-regular-normal-normal-*-19-*-*-*-m-0-iso10646-1")
 (set-fontset-font t 'han "LXGW WenKai")
-
-(setq frame-title-format '(multiple-frames "%b"
-                 ("" "%b - Black Source: Emacs @ " system-name)))
-
-;; set transparent effect (29)
-(add-to-list 'default-frame-alist '(alpha-background . 85))
-
-;; native smooth scrolling (29)
-(pixel-scroll-precision-mode)
-;; normally it is for touchpad, enable for mouse:
-(setq pixel-scroll-precision-large-scroll-height 40.0)
-;;;endif dump
 
 
 ;;@ package manager ;;
@@ -70,20 +61,22 @@
               indent-tabs-mode nil)    ; must be setq-default
 (setq backward-delete-char-untabify-method 'hungry)
 
-;;;ifdef dump
 (setq display-line-numbers-type 'relative)
-;;;endif dump
-(global-display-line-numbers-mode)
+(if (display-graphic-p)
+    (progn
+      (global-display-line-numbers-mode)
+      (global-tab-line-mode t)))
 
 (setq epa-file-cache-passphrase-for-symmetric-encryption t
       epg-pinentry-mode 'loopback)    ; use minibuffer instead of popup
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 (global-auto-revert-mode t)
-(ido-mode t)
 (electric-pair-mode t)
 
 (setq shr-use-fonts nil)
+(setq dired-listing-switches "-alh")
+(setenv "LC_TIME" "en_US.UTF-8")
 
 ;; manually do the gcmh https://akrl.sdf.org
 (setq normal-gc-threshold 6400000)
@@ -94,6 +87,7 @@
      (float-time (time-since time))))
 (run-with-idle-timer 30 t
                      (lambda ()
+                       (message "gcmh: start")
                        (message "gcmh: %.04fsec"
                                 (k-time (garbage-collect)))))
 
@@ -401,9 +395,8 @@
 (use-package darkman
   :config
   (setq modus-themes-mode-line '(borderless))
-  (if (display-graphic-p)
-      (setq darkman-themes '(:light adwaita :dark nord))
-    (setq darkman-themes '(:light zenburn :dark modus-vivendi)))
+  (if (not (display-graphic-p))
+    (setq darkman-themes '(:light zenburn :dark mariana)))
   (darkman-mode))
 
 (use-package evil-god-state
@@ -416,16 +409,19 @@
   :config
   (setq writeroom-fullscreen-effect 'maximized))
 
+(use-package icomplete
+  :config
+  (setq icomplete-compute-delay 0
+        icomplete-delay-completions-threshold 0
+        icomplete-show-matches-on-no-input t
+        icomplete-scroll t)
+  (bind-key "TAB" #'icomplete-force-complete icomplete-minibuffer-map)
+  (icomplete-vertical-mode t))
+
 ;;@ use-package/languages ;;
 (use-package cc-mode
   :defer t
   :init
-  (defun bsd-c-style ()
-    (interactive)
-    (setq c-mode-hook
-          (lambda ()
-            (setq-local tab-width 8)
-            (indent-tabs-mode t)))) ; per-buffer setting, won't mess up other buffer
   :config
   (setq c-default-style '((c-mode    . "bsd")
                           (java-mode . "java")
@@ -589,11 +585,11 @@
       (concat
        (emacs-init-time ";; %2.4f secs, ")
        (format "%d gcs\n" gcs-done)
-       (buttonize ";; (config)" (lambda (_) (find-file-existing "~/.emacs")))
+       (buttonize ";; (config)" (lambda (_) (find-file-existing "~/.emacs.d/init.el")))
        "\n"
        (buttonize ";; (collections)" (lambda (_) (find-file-existing "~/git/dongdigua.github.io/org/internet_collections.org")))
        "\n"
-       (buttonize ";; (agenda)" #'org-agenda)
+       (buttonize ";; (quotes)" (lambda (_) (find-file-existing "~/git/dongdigua.github.io/quotes.txt")))
        "\n"
        ))
 

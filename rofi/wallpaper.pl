@@ -1,33 +1,10 @@
 #! /usr/bin/perl
 # just try some perl
 
-$base_dir = "~/Pictures/wallpaper/";
-@list = (
-    "ocean-waves.jpg",
-    "winter_mountain.jpg",
-    "miku-wallpaper-modified.jpg",
-    "centos7-bg.jpg",
-    "crystal-water.jpg",
-    "plain-flower.png",
-    "beautiful-ocean.jpg",
-    "Miku_Day_2020.png",
-    "Miku_Winter.png",
-    "Miku_Landscape.png",
-    "centos9-motif.png",
-    "Cardinali.jpg",
-    "debian9-softwaves.png",
-    "f38-day.jpg",
-    "f26-dawn.png",
-    "f26-day.png",
-    "f26-dusk.png",
-    "f26-night.png",
-    "aurora.jpg",
-    "nord-pixel-moon.png",
-    "landscape-1216423.jpg",
-    "View_through_a_broken_window_from_a_room_in_Sanatorium_du_Basil.jpg",
-    "wallpaper_minecraft_burberry_2560x1440.png",
-    "HM2.jpg",
-);
+$base_dir = "/home/digua/Pictures/wallpaper/";
+opendir(my $dh, $base_dir) || die "can't opendir $base_dir: $!";
+@list = grep { !/^\.\.?$/ } readdir($dh);
+closedir $dh;
 
 $arg1 = $ARGV[0];
 $arg2 = $ARGV[1];
@@ -47,7 +24,7 @@ sub find_sock {
 }
 
 sub do_bg {
-    if ($_[0] ~~ @list) {
+    if (grep { $_ eq $_[0] } @list) {
         $sock = find_sock();
         system("swaymsg -s $sock output '* bg $base_dir$_[0] fill' >> /dev/null");
     }
